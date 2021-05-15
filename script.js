@@ -7,6 +7,7 @@ const btnsOpenModal = document.querySelectorAll(".btn--show-modal");
 
 const btnLearnMore = document.querySelector(".btn--scroll-to");
 const section1 = document.querySelector("#section--1");
+const allNavLinks = document.querySelector(".nav__links");
 
 const openModal = function (e) {
   e.preventDefault();
@@ -32,4 +33,15 @@ document.addEventListener("keydown", function (e) {
 
 btnLearnMore.addEventListener("click", () => {
   section1.scrollIntoView({ behavior: "smooth" });
+});
+
+allNavLinks.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  if (e.target.className === "nav__link") {
+    const id = e.target.getAttribute("href");
+    const requiredSection = document.querySelector(`${id}`);
+
+    requiredSection.scrollIntoView({ behavior: "smooth" });
+  }
 });
