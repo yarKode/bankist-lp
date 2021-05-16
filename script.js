@@ -9,6 +9,8 @@ const btnLearnMore = document.querySelector(".btn--scroll-to");
 const section1 = document.querySelector("#section--1");
 const allNavLinks = document.querySelector(".nav__links");
 
+const navContainer = document.querySelector(".nav");
+
 const operationTabsContainer = document.querySelector(
   ".operations__tab-container"
 );
@@ -71,3 +73,20 @@ operationTabsContainer.addEventListener("click", (e) => {
 
   appropriateContent.classList.add("operations__content--active");
 });
+
+function opacityHandler(e) {
+  if (e.target.classList.contains("nav__links")) return;
+  const hoveredLink = e.target;
+  const logo = hoveredLink.closest(".nav").querySelector("img");
+
+  const siblings = [...hoveredLink.closest(".nav__links").children];
+
+  siblings.forEach((el) => {
+    if (el.querySelector("a") !== hoveredLink) el.style.opacity = this;
+  });
+  logo.style.opacity = this;
+}
+
+allNavLinks.addEventListener("mouseover", opacityHandler.bind(0.5));
+
+allNavLinks.addEventListener("mouseout", opacityHandler.bind(1));
