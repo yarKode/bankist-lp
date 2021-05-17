@@ -9,6 +9,8 @@ const btnLearnMore = document.querySelector(".btn--scroll-to");
 const section1 = document.querySelector("#section--1");
 const allNavLinks = document.querySelector(".nav__links");
 
+const header = document.querySelector(".header");
+
 const navContainer = document.querySelector(".nav");
 
 const operationTabsContainer = document.querySelector(
@@ -90,3 +92,25 @@ function opacityHandler(e) {
 allNavLinks.addEventListener("mouseover", opacityHandler.bind(0.5));
 
 allNavLinks.addEventListener("mouseout", opacityHandler.bind(1));
+
+const obsCallback = (entries) => {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) {
+    navContainer.classList.add("sticky");
+  } else {
+    navContainer.classList.remove("sticky");
+  }
+};
+
+const navHeight = navContainer.getBoundingClientRect().height;
+
+const obsOptions = {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+};
+
+const headerObserver = new IntersectionObserver(obsCallback, obsOptions);
+
+headerObserver.observe(header);
