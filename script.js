@@ -23,6 +23,12 @@ const sections = document.querySelectorAll(".section");
 
 const imgTargets = document.querySelectorAll("img[data-src]");
 
+const slides = document.querySelectorAll(".slide");
+const slider = document.querySelector(".slider");
+
+const btnSliderRight = document.querySelector(".slider__btn--right");
+const btnSliderLeft = document.querySelector(".slider__btn--left");
+
 const openModal = function (e) {
   e.preventDefault();
   modal.classList.remove("hidden");
@@ -141,7 +147,7 @@ const sectionObserver = new IntersectionObserver(
 
 sections.forEach((s) => {
   sectionObserver.observe(s);
-  s.classList.add("section--hidden");
+  /* s.classList.add("section--hidden"); */
 });
 
 const imgObsCallback = (entries, observer) => {
@@ -150,7 +156,6 @@ const imgObsCallback = (entries, observer) => {
   if (!entry.target.classList.contains("lazy-img")) return;
   const srcUrl = entry.target.dataset.src;
 
-  console.log(entry);
   entry.target.src = `${srcUrl}`;
   entry.target.classList.remove("lazy-img");
 
@@ -165,4 +170,33 @@ const imgObserver = new IntersectionObserver(imgObsCallback, imgObsOptions);
 
 imgTargets.forEach((img) => {
   imgObserver.observe(img);
+});
+
+let currentSlide = 0;
+
+/* slider.style.transform = `scale(0.4) translateX(-600px)`;
+slider.style.overflow = "visible";
+ */
+function goToSlide(slide) {
+  slides.forEach((s, i) => {
+    s.style.transform = `translateX(${100 * (i - slide)}%)`;
+  });
+}
+
+goToSlide(0);
+
+btnSliderRight.addEventListener("click", () => {
+  currentSlide++;
+
+  if (currentSlide === slides.length) currentSlide = 0;
+
+  goToSlide(currentSlide);
+});
+
+btnSliderLeft.addEventListener("click", () => {
+  currentSlide--;
+
+  if (currentSlide < 0) currentSlide = slides.length - 1;
+
+  goToSlide(currentSlide);
 });
