@@ -29,6 +29,8 @@ const slider = document.querySelector(".slider");
 const btnSliderRight = document.querySelector(".slider__btn--right");
 const btnSliderLeft = document.querySelector(".slider__btn--left");
 
+const dotsContainer = document.querySelector(".dots");
+
 const openModal = function (e) {
   e.preventDefault();
   modal.classList.remove("hidden");
@@ -177,26 +179,74 @@ let currentSlide = 0;
 /* slider.style.transform = `scale(0.4) translateX(-600px)`;
 slider.style.overflow = "visible";
  */
-function goToSlide(slide) {
-  slides.forEach((s, i) => {
-    s.style.transform = `translateX(${100 * (i - slide)}%)`;
+
+function sliderCall() {
+  function goToSlide(slide) {
+    slides.forEach((s, i) => {
+      s.style.transform = `translateX(${100 * (i - slide)}%)`;
+    });
+  }
+
+  goToSlide(0);
+
+  function slideRight() {
+    currentSlide++;
+
+    if (currentSlide === slides.length) currentSlide = 0;
+
+    goToSlide(currentSlide);
+    activeDot(currentSlide);
+  }
+
+  function slideLeft() {
+    currentSlide--;
+
+    if (currentSlide < 0) currentSlide = slides.length - 1;
+
+    goToSlide(currentSlide);
+    activeDot(currentSlide);
+  }
+
+  btnSliderRight.addEventListener("click", slideRight);
+
+  btnSliderLeft.addEventListener("click", slideLeft);
+
+  document.addEventListener("keydown", (e) => {
+    const { key } = e;
+
+    key === "ArrowRight" && slideRight();
+    key === "ArrowLeft" && slideLeft();
   });
+
+  function createDots() {
+    slides.forEach((s, i) => {
+      dotsContainer.insertAdjacentHTML(
+        "beforeend",
+        `<button class="dots__dot" data-slide="${i}"></button>`
+      );
+    });
+  }
+
+  createDots();
+  activeDot(currentSlide);
+
+  dotsContainer.addEventListener("click", (e) => {
+    if (!e.target.classList.contains("dots__dot")) return;
+    const { slide } = e.target.dataset;
+
+    goToSlide(slide);
+    activeDot(slide);
+  });
+
+  function activeDot(slide) {
+    const dots = document.querySelectorAll(".dots__dot");
+
+    dots.forEach((dot, i) => {
+      dot.classList.remove("dots__dot--active");
+    });
+
+    dots[slide].classList.add("dots__dot--active");
+  }
 }
 
-goToSlide(0);
-
-btnSliderRight.addEventListener("click", () => {
-  currentSlide++;
-
-  if (currentSlide === slides.length) currentSlide = 0;
-
-  goToSlide(currentSlide);
-});
-
-btnSliderLeft.addEventListener("click", () => {
-  currentSlide--;
-
-  if (currentSlide < 0) currentSlide = slides.length - 1;
-
-  goToSlide(currentSlide);
-});
+sliderCall();
