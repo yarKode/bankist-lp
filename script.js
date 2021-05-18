@@ -19,6 +19,10 @@ const operationTabsContainer = document.querySelector(
 const operationTabs = document.querySelectorAll(".operations__tab");
 const operationContents = document.querySelectorAll(".operations__content");
 
+const sections = document.querySelectorAll(".section");
+
+const imgTargets = document.querySelectorAll("img[data-src]");
+
 const openModal = function (e) {
   e.preventDefault();
   modal.classList.remove("hidden");
@@ -114,3 +118,51 @@ const obsOptions = {
 const headerObserver = new IntersectionObserver(obsCallback, obsOptions);
 
 headerObserver.observe(header);
+
+const sectionsObsOptions = {
+  root: null,
+  threshold: 0.15,
+};
+
+const sectionsCallback = (entries, observer) => {
+  const [entry] = entries;
+  const sectionId = entry.target.id;
+
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove("section--hidden");
+
+  observer.unobserve(entry.target);
+};
+
+const sectionObserver = new IntersectionObserver(
+  sectionsCallback,
+  sectionsObsOptions
+);
+
+sections.forEach((s) => {
+  sectionObserver.observe(s);
+  s.classList.add("section--hidden");
+});
+
+const imgObsCallback = (entries, observer) => {
+  const [entry] = entries;
+  if (!entry.isIntersecting) return;
+  if (!entry.target.classList.contains("lazy-img")) return;
+  const srcUrl = entry.target.dataset.src;
+
+  console.log(entry);
+  entry.target.src = `${srcUrl}`;
+  entry.target.classList.remove("lazy-img");
+
+  observer.unobserve(entry.target);
+};
+
+const imgObsOptions = {
+  root: null,
+  threshold: 0,
+};
+const imgObserver = new IntersectionObserver(imgObsCallback, imgObsOptions);
+
+imgTargets.forEach((img) => {
+  imgObserver.observe(img);
+});
